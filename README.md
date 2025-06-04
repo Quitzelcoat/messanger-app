@@ -1,5 +1,10 @@
 # messanger-app
 
+1. Setup basic express backend, frontend, database and connect them together.
+2. Create Authorization Pages for sign up and login.
+3. Create messaging for sending, receiving, editing, deleting messages
+4. Create Profile Customization Page to change name, Profile, email, pass etc.
+
 ## Backend
 
 1. Login and Signup
