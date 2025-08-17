@@ -1,6 +1,7 @@
 // src/components/AllUsers.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function AllUsers({ token }) {
   const [users, setUsers] = useState([]);
@@ -57,11 +58,12 @@ export default function AllUsers({ token }) {
   }, [token]);
 
   const openChatWith = (user) => {
-    navigate(`/?user=${encodeURIComponent(user.id)}`);
+    navigate(`/chat/?user=${encodeURIComponent(user.id)}`);
   };
 
   return (
     <div style={{ maxWidth: 800, margin: '2rem auto' }}>
+      <Link to={'/'}>Home</Link>
       <h2>All Users</h2>
 
       {loading && <p>Loading users...</p>}
