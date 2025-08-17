@@ -56,3 +56,30 @@ exports.getMessages = async (req, res) => {
     return res.status(500).json({ error: 'could not fetch messages' });
   }
 };
+
+exports.deleteMessage = async (req, res) => {
+  const messageId = Number(req.params.id);
+  const userId = req.user.userId;
+
+  try {
+    const message = await prisma.message.findUnique({
+      where: { id: messageId },
+    });
+    if (!message) return res.status(404).json({ error: 'Message not found' });
+
+    if (message.senderId !== userId) {
+      return res
+        .status(403)
+        .json({ error: 'Not allowed to delete this message' });
+    }
+
+    // Hard delete:
+    await prisma.message.delete({ where: { id: messageId } });
+
+    // If you prefer soft-delete, add an `isDeleted` boolean to the Message model instead of this delete.
+    return res.json({ ok: true, message: 'Deleted' });
+  } catch (err) {
+    console.error('Delete message error:', err);
+    return res.status(500).json({ error: 'Could not delete message' });
+  }
+};
