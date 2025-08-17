@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Chat from './components/Chat';
+import AllUsers from './components/AllUsers';
 
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
@@ -20,6 +21,17 @@ function App() {
           element={
             token ? (
               <Chat onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/all-users"
+          element={
+            token ? (
+              <AllUsers token={token} />
             ) : (
               <Navigate to="/login" replace />
             )
