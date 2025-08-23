@@ -20,10 +20,10 @@ export default function Login({ setToken }) {
         form
       );
 
-      localStorage.setItem('token', data.token);
+      // localStorage.setItem('token', data.token);
       setToken(data.token);
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 
       navigate('/');
     } catch (error) {

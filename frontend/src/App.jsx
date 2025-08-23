@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import useAuth from './components/auth/AuthProvider';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './components/Signup';
 import Login from './components/Login';
@@ -7,12 +7,7 @@ import Chat from './components/Chat';
 import AllUsers from './components/AllUsers';
 
 function App() {
-  const [token, setToken] = useState(() => localStorage.getItem('token'));
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-  };
+  const { token, setToken, handleLogout } = useAuth();
 
   return (
     <BrowserRouter>
