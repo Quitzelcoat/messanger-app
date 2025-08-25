@@ -13,6 +13,7 @@ exports.authMiddleware = (req, res, next) => {
     }
 
     req.user = payload;
+    console.log(token); // Log the token for debugging
     next();
   });
 };
