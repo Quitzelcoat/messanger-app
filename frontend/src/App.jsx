@@ -5,6 +5,7 @@ import Login from './components/Login';
 import HomePage from './components/HomePage';
 import Chat from './components/Chat';
 import AllUsers from './components/AllUsers';
+import Profile from './components/Profile';
 
 function App() {
   const { token, setToken, handleLogout } = useAuth();
@@ -60,6 +61,11 @@ function App() {
         <Route
           path="*"
           element={<Navigate to={token ? '/' : '/login'} replace />}
+        />
+
+        <Route
+          path="/profile"
+          element={token ? <Profile /> : <Navigate to="/login" replace />}
         />
       </Routes>
     </BrowserRouter>

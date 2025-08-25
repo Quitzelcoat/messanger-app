@@ -9,6 +9,10 @@ export default function HomePage({ onLogout }) {
         <Link to="/all-users">See all users</Link>
       </div>
 
+      <div style={{ marginBottom: 12 }}>
+        <Link to="/profile">Profile</Link>
+      </div>
+
       <button onClick={onLogout}>Logout</button>
     </div>
   );
