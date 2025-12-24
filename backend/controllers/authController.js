@@ -1,3 +1,4 @@
+// controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('../generated/prisma');
@@ -5,6 +6,7 @@ const prisma = new PrismaClient();
 
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -35,6 +37,7 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await prisma.user.findUnique({
       where: { email },
@@ -45,6 +48,7 @@ exports.login = async (req, res) => {
         password: true,
       },
     });
+
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -58,8 +62,10 @@ exports.login = async (req, res) => {
       userId: user.id,
       username: user.username,
     };
+
+    // This adds an "exp" claim in seconds since epoch. [web:1][web:2]
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
     });
 
     return res.json({

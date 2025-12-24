@@ -1,9 +1,9 @@
-import useAuth from './components/auth/AuthProvider';
+import useAuth from './auth/AuthProvider';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import HomePage from './components/HomePage';
-import Chat from './components/Chat';
+import Signup from './pages/SignupPage/Signup';
+import Login from './pages/LoginPage/Login';
+import HomePage from './pages/HomePage/HomePage';
+import Chat from './pages/ChatPage/Chat';
 import AllUsers from './components/AllUsers';
 import Profile from './components/Profile';
 

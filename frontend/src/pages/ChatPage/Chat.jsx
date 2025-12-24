@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import MessageList from './MessageList';
-import MessageForm from './MessageForm';
+import MessageList from '../../components/MessageList';
+import MessageForm from '../../components/MessageForm';
 
 export default function Chat({ token, onLogout }) {
   const [searchParams] = useSearchParams();

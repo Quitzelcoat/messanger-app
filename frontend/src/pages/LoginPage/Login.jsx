@@ -1,3 +1,4 @@
+// src/components/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -14,16 +15,15 @@ export default function Login({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
     try {
       const { data } = await axios.post(
         'http://localhost:3000/api/login',
         form
       );
 
-      // localStorage.setItem('token', data.token);
+      // store token via hook
       setToken(data.token);
-
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 
       navigate('/');
     } catch (error) {
@@ -36,17 +36,25 @@ export default function Login({ setToken }) {
     <>
       <h2>Log In</h2>
       {error && <p>{error}</p>}
+
       <form onSubmit={handleSubmit}>
         <label>
           Email
-          <input name="email" type="email" onChange={handleChange} required />
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
         </label>
 
         <label>
-          password
+          Password
           <input
             name="password"
             type="password"
+            value={form.password}
             onChange={handleChange}
             required
           />

@@ -1,7 +1,7 @@
 // src/components/Profile.jsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import useAuth from './auth/AuthProvider'; // adjust path if necessary
+import useAuth from '../auth/AuthProvider'; // adjust path if necessary
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Profile() {

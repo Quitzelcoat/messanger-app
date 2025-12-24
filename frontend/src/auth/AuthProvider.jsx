@@ -7,7 +7,6 @@ export default function useAuth() {
   const logoutTimerRef = useRef(null);
   const interceptorRef = useRef(null);
 
-  // Stable setter used by Login component
   const setToken = useCallback((newToken) => {
     if (newToken) {
       localStorage.setItem('token', newToken);
@@ -21,25 +20,16 @@ export default function useAuth() {
   }, []);
 
   const handleLogout = useCallback(() => {
-    // clear a scheduled logout (if any)
     if (logoutTimerRef.current) {
       clearTimeout(logoutTimerRef.current);
       logoutTimerRef.current = null;
     }
-    // clear token everywhere
     setToken(null);
   }, [setToken]);
 
-  // ensure axios header mirrors token state
+  // **FIXED: ONLY [token] dependency - runs only when token changes or on mount**
   useEffect(() => {
-    if (token)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    else delete axios.defaults.headers.common['Authorization'];
-  }, [token]);
-
-  // schedule automatic logout based on token.exp
-  useEffect(() => {
-    // clear previous timer
+    // Clear any existing timer
     if (logoutTimerRef.current) {
       clearTimeout(logoutTimerRef.current);
       logoutTimerRef.current = null;
@@ -49,36 +39,44 @@ export default function useAuth() {
 
     const payload = decodeJwt(token);
     if (!payload || !payload.exp) {
-      // invalid token -> logout
       handleLogout();
       return;
     }
 
     const expiresAtMs = payload.exp * 1000;
-    const bufferMs = 5000; // small buffer to avoid racing expiry
+    const bufferMs = 5000;
     const msUntilExpiry = expiresAtMs - Date.now() - bufferMs;
 
     if (msUntilExpiry <= 0) {
-      // expired or about to expire -> logout
       handleLogout();
       return;
     }
 
+    // Set ONE timer that respects your .env JWT_EXPIRES_IN="1min"
     logoutTimerRef.current = setTimeout(() => {
       handleLogout();
     }, msUntilExpiry);
 
+    // Cleanup on unmount or token change
     return () => {
       if (logoutTimerRef.current) {
         clearTimeout(logoutTimerRef.current);
         logoutTimerRef.current = null;
       }
     };
-  }, [token, handleLogout]);
+  }, [token, handleLogout]); // include handleLogout to satisfy React Hooks ESLint rule
 
-  // axios interceptor: reactively logout on 401/403
+  // axios header sync
   useEffect(() => {
-    // remove old interceptor
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  }, [token]);
+
+  // axios interceptor
+  useEffect(() => {
     if (interceptorRef.current !== null) {
       axios.interceptors.response.eject(interceptorRef.current);
       interceptorRef.current = null;
@@ -89,7 +87,6 @@ export default function useAuth() {
       (err) => {
         const status = err?.response?.status;
         if (status === 401 || status === 403) {
-          // server refuses token -> logout
           handleLogout();
         }
         return Promise.reject(err);
