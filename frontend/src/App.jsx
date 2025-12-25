@@ -4,7 +4,7 @@ import Signup from './pages/SignupPage/Signup';
 import Login from './pages/LoginPage/Login';
 import HomePage from './pages/HomePage/HomePage';
 import Chat from './pages/ChatPage/Chat';
-import AllUsers from './components/AllUsers';
+import AllUsers from './pages/AllUsers/AllUsers';
 import Profile from './components/Profile';
 
 function App() {

@@ -31,3 +31,9 @@ html.dark {
   --glass-bg: rgba(30, 41, 59, 0.3);
   --glass-border: rgba(30, 41, 59, 0.6);
 }
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}

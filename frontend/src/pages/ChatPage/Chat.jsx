@@ -1,8 +1,10 @@
+// src/pages/ChatPage/Chat.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import MessageList from '../../components/MessageList';
-import MessageForm from '../../components/MessageForm';
+import MessageList from '../../components/messageBox/MessageList';
+import MessageForm from '../../components/messageBox/MessageForm';
+import styles from './Chat.module.css';
 
 export default function Chat({ token, onLogout }) {
   const [searchParams] = useSearchParams();
@@ -117,35 +119,35 @@ export default function Chat({ token, onLogout }) {
   };
 
   return (
-    <div style={{ display: 'flex', gap: 20, padding: 20 }}>
-      <aside style={{ width: 280 }}>
-        <div style={{ marginBottom: 12 }}>
-          <button onClick={onLogout}>Logout</button>
-        </div>
-
-        <div style={{ marginTop: 12 }}>
-          <Link to="/all-users">All Users</Link>
-        </div>
+    <div className={styles.container}>
+      <aside className={styles.sidebar}>
+        <button onClick={onLogout} className={styles.logoutBtn}>
+          Sign out
+        </button>
+        <Link to="/all-users" className={styles.usersLink}>
+          👥 All Users
+        </Link>
       </aside>
 
-      <main style={{ flex: 1 }}>
-        <h2>Chat</h2>
-
+      <main className={styles.main}>
         {!selectedUser ? (
-          <p>
-            Select someone to message — go to{' '}
-            <Link to="/all-users">All Users</Link>
-          </p>
+          <div className={styles.noChat}>
+            <div className={styles.noChatIcon}>💬</div>
+            <h3>Select someone to message</h3>
+            <p>
+              Go to <Link to="/all-users">All Users</Link> to start chatting
+            </p>
+          </div>
         ) : (
           <>
-            <div style={{ marginBottom: 12 }}>
-              <strong>Chat with {selectedUser.username}</strong>
-              <div style={{ fontSize: 12, color: '#666' }}>
-                id: {selectedUser.id}
-              </div>
-            </div>
+            <header className={styles.chatHeader}>
+              <h2 className={styles.chatTitle}>
+                Chat with {selectedUser.username}
+              </h2>
+              <p className={styles.chatMeta}>id: {selectedUser.id}</p>
+            </header>
 
-            {error && <p style={{ color: 'crimson' }}>{error}</p>}
+            {error && <div className={styles.error}>{error}</div>}
 
             <MessageList
               messages={messages}
@@ -156,9 +158,7 @@ export default function Chat({ token, onLogout }) {
             <MessageForm onSend={handleSend} />
 
             {loadingMessages && (
-              <p style={{ fontSize: 12, color: '#666' }}>
-                Refreshing messages…
-              </p>
+              <div className={styles.loadingText}>Refreshing messages…</div>
             )}
           </>
         )}
