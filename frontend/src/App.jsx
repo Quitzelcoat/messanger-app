@@ -5,7 +5,7 @@ import Login from './pages/LoginPage/Login';
 import HomePage from './pages/HomePage/HomePage';
 import Chat from './pages/ChatPage/Chat';
 import AllUsers from './pages/AllUsers/AllUsers';
-import Profile from './components/Profile';
+import Profile from './pages/ProfilePage/Profile';
 
 function App() {
   const { token, setToken, handleLogout } = useAuth();
