@@ -1,8 +1,7 @@
 // controllers/authController.js
+const prisma = require('../prismaClient');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
 
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -63,7 +62,8 @@ exports.login = async (req, res) => {
       username: user.username,
     };
 
-    // This adds an "exp" claim in seconds since epoch. [web:1][web:2]
+    console.log('JWT_EXPIRES_IN value:', process.env.JWT_EXPIRES_IN);
+
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN || '1h',
     });

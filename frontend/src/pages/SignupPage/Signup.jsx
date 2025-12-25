@@ -1,4 +1,4 @@
-// src/components/Signup.jsx
+// src/pages/SignupPage/Signup.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
