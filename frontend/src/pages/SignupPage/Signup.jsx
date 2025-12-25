@@ -1,7 +1,8 @@
 // src/pages/SignupPage/Signup.jsx
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import styles from './Signup.module.css';
 
 export default function Signup() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
@@ -27,49 +28,66 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup">
-      <h1>Signup</h1>
-      {error && <p>{error}</p>}
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>Join Messenger</h2>
+        <p className={styles.subtitle}>
+          A few details and you are ready to start chatting.
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username
-          <input
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        {error && <p className={styles.error}>{error}</p>}
 
-        <label>
-          Email
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label className={styles.label}>Username</label>
+            <input
+              name="username"
+              placeholder="choose-a-handle"
+              className={styles.input}
+              value={form.username}
+              onChange={handleChange}
+              required
+              autoComplete="username"
+            />
+          </div>
 
-        <label>
-          Password
-          <input
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
+          <div className={styles.field}>
+            <label className={styles.label}>Email</label>
+            <input
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className={styles.input}
+              value={form.email}
+              onChange={handleChange}
+              required
+              autoComplete="email"
+            />
+          </div>
 
-        <button type="submit">Sign Up</button>
-      </form>
+          <div className={styles.field}>
+            <label className={styles.label}>Password</label>
+            <input
+              name="password"
+              type="password"
+              placeholder="Create a strong password"
+              className={styles.input}
+              value={form.password}
+              onChange={handleChange}
+              required
+              autoComplete="new-password"
+            />
+          </div>
 
-      <p>
-        Already have an account? <a href="/login">Log In</a>
-      </p>
+          <button type="submit" className={styles.button}>
+            Create account
+          </button>
+        </form>
+
+        <div className={styles.linkRow}>
+          Already have an account? <Link to="/login">Log in</Link>
+        </div>
+      </div>
     </div>
   );
 }

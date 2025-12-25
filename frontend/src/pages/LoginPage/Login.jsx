@@ -1,7 +1,8 @@
 // src/pages/LoginPage/Login.jsx
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import styles from './Login.module.css';
 
 export default function Login({ setToken }) {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -21,10 +22,7 @@ export default function Login({ setToken }) {
         'http://localhost:3000/api/login',
         form
       );
-
-      // store token via hook
       setToken(data.token);
-
       navigate('/');
     } catch (error) {
       const msg = error.response?.data?.error || 'Login failed';
@@ -33,39 +31,50 @@ export default function Login({ setToken }) {
   };
 
   return (
-    <>
-      <h2>Log In</h2>
-      {error && <p>{error}</p>}
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>Log In</h2>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        {error && <p className={styles.error}>{error}</p>}
 
-        <label>
-          Password
-          <input
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label className={styles.label}>Email</label>
+            <input
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className={styles.input}
+              value={form.email}
+              onChange={handleChange}
+              required
+              autoComplete="email"
+            />
+          </div>
 
-        <button type="submit">Log In</button>
-      </form>
+          <div className={styles.field}>
+            <label className={styles.label}>Password</label>
+            <input
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              className={styles.input}
+              value={form.password}
+              onChange={handleChange}
+              required
+              autoComplete="current-password"
+            />
+          </div>
 
-      <p>
-        Need an account? <a href="/signup">Sign Up</a>
-      </p>
-    </>
+          <button type="submit" className={styles.button}>
+            Log In
+          </button>
+        </form>
+
+        <div className={styles.linkRow}>
+          Need an account? <Link to="/signup">Sign Up</Link>
+        </div>
+      </div>
+    </div>
   );
 }
