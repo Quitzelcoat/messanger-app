@@ -166,31 +166,6 @@
   text-align: center;
 }
 
-.statsRow {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  margin-top: 1rem;
-}
-
-.statItem {
-  text-align: center;
-}
-
-.statNumber {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary);
-}
-
-.statLabel {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.25rem;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .header {
@@ -208,10 +183,5 @@
 
   .messageButton {
     width: 100%;
-  }
-
-  .statsRow {
-    flex-direction: column;
-    gap: 1.5rem;
   }
 }

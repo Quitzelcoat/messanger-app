@@ -123,12 +123,6 @@ export default function AllUsers({ token }) {
                   {users.length}
                 </span>
               </div>
-              <div className={styles.statsRow}>
-                <div className={styles.statItem}>
-                  <div className={styles.statNumber}>{users.length}</div>
-                  <div className={styles.statLabel}>Active users</div>
-                </div>
-              </div>
             </div>
           </>
         )}

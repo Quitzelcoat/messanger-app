@@ -4,7 +4,7 @@
   --tertiary: #f1f5f9;
   --white: #ffffff;
 
-  --primary-rgb: 30, 41, 59;
+  --primary-rgb: rgb(30, 41, 59);
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
   --text-primary: #0f172a;
@@ -16,12 +16,12 @@
 
 /* Dark theme */
 html.dark {
-  --primary: #e2e8f0;
-  --secondary: #94a3b8;
-  --tertiary: #0f172a;
+  --primary: #ffffff;
+  --secondary: #f1f5f9;
+  --tertiary: #64748b;
   --white: #1e293b;
 
-  --primary-rgb: 226, 232, 240;
+  --primary-rgb: rgb(226, 232, 240);
   --bg-primary: #0f0f23;
   --bg-secondary: #1e293b;
   --text-primary: #f1f5f9;
@@ -36,4 +36,5 @@ body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
+  background: var(--bg-primary);
 }
