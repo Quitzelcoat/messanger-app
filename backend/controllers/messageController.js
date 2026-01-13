@@ -1,7 +1,6 @@
-const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
+import prisma from '../prismaClient.js';
 
-exports.sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
   const { receiverId, content } = req.body;
   const senderId = req.user.userId;
 
@@ -20,12 +19,12 @@ exports.sendMessage = async (req, res) => {
 
     return res.status(201).json(message);
   } catch (err) {
-    console.log('Error creating message:', err);
-    return res.status(500).json({ error: 'could not send message' });
+    console.error('Error creating message:', err);
+    return res.status(500).json({ error: 'Could not send message' });
   }
 };
 
-exports.getMessages = async (req, res) => {
+export const getMessages = async (req, res) => {
   const userId = req.user.userId;
   const other = req.query.withUser ? Number(req.query.withUser) : null;
 
@@ -44,8 +43,12 @@ exports.getMessages = async (req, res) => {
     const messages = await prisma.message.findMany({
       where: whereClause,
       include: {
-        sender: { select: { id: true, username: true, profilePic: true } },
-        receiver: { select: { id: true, username: true, profilePic: true } },
+        sender: {
+          select: { id: true, username: true, profilePic: true },
+        },
+        receiver: {
+          select: { id: true, username: true, profilePic: true },
+        },
       },
       orderBy: { timestamp: 'asc' },
     });
@@ -53,11 +56,11 @@ exports.getMessages = async (req, res) => {
     return res.json(messages);
   } catch (err) {
     console.error('Error fetching messages:', err);
-    return res.status(500).json({ error: 'could not fetch messages' });
+    return res.status(500).json({ error: 'Could not fetch messages' });
   }
 };
 
-exports.deleteMessage = async (req, res) => {
+export const deleteMessage = async (req, res) => {
   const messageId = Number(req.params.id);
   const userId = req.user.userId;
 
@@ -65,7 +68,10 @@ exports.deleteMessage = async (req, res) => {
     const message = await prisma.message.findUnique({
       where: { id: messageId },
     });
-    if (!message) return res.status(404).json({ error: 'Message not found' });
+
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
 
     if (message.senderId !== userId) {
       return res
@@ -73,10 +79,10 @@ exports.deleteMessage = async (req, res) => {
         .json({ error: 'Not allowed to delete this message' });
     }
 
-    // Hard delete:
-    await prisma.message.delete({ where: { id: messageId } });
+    await prisma.message.delete({
+      where: { id: messageId },
+    });
 
-    // If you prefer soft-delete, add an `isDeleted` boolean to the Message model instead of this delete.
     return res.json({ ok: true, message: 'Deleted' });
   } catch (err) {
     console.error('Delete message error:', err);

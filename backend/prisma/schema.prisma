@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -16,8 +15,8 @@ model User {
   profilePic       String?
   bio              String?
   updatedAt        DateTime  @default(now()) @updatedAt
-  sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  sentMessages     Message[] @relation("SentMessages")
 }
 
 model Message {
@@ -26,6 +25,6 @@ model Message {
   receiverId Int
   content    String
   timestamp  DateTime @default(now())
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
 }

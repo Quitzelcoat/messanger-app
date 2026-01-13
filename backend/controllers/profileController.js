@@ -1,8 +1,7 @@
-const bcrypt = require('bcrypt');
-const { PrismaClient } = require('../generated/prisma'); // keep your path
-const prisma = new PrismaClient();
+import bcrypt from 'bcrypt';
+import prisma from '../prismaClient.js';
 
-exports.getMe = async (req, res) => {
+export const getMe = async (req, res) => {
   try {
     const userId = req.user?.userId;
     if (!userId) return res.sendStatus(401);
@@ -18,15 +17,18 @@ exports.getMe = async (req, res) => {
       },
     });
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     return res.json(user);
   } catch (err) {
-    console.error('getMe error', err);
+    console.error('getMe error:', err);
     return res.status(500).json({ error: 'Could not fetch profile' });
   }
 };
 
-exports.updateMe = async (req, res) => {
+export const updateMe = async (req, res) => {
   try {
     const userId = req.user?.userId;
     if (!userId) return res.sendStatus(401);
@@ -57,30 +59,28 @@ exports.updateMe = async (req, res) => {
 
     return res.json(updated);
   } catch (err) {
-    console.error('updateMe error', err);
+    console.error('updateMe error:', err);
+
     if (err.code === 'P2002') {
-      const meta = err.meta || {};
-      const field = meta.target
-        ? Array.isArray(meta.target)
-          ? meta.target[0]
-          : meta.target
-        : 'field';
+      const target = err.meta?.target;
+      const field = Array.isArray(target) ? target[0] : target ?? 'field';
       return res.status(400).json({ error: `${field} already in use` });
     }
+
     return res.status(500).json({ error: 'Could not update profile' });
   }
 };
 
-exports.changePassword = async (req, res) => {
+export const changePassword = async (req, res) => {
   try {
     const userId = req.user?.userId;
     if (!userId) return res.sendStatus(401);
 
     const { currentPassword, newPassword } = req.body;
     if (!currentPassword || !newPassword) {
-      return res
-        .status(400)
-        .json({ error: 'currentPassword and newPassword required' });
+      return res.status(400).json({
+        error: 'currentPassword and newPassword required',
+      });
     }
 
     const user = await prisma.user.findUnique({
@@ -88,13 +88,17 @@ exports.changePassword = async (req, res) => {
       select: { id: true, password: true },
     });
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     const match = await bcrypt.compare(currentPassword, user.password);
-    if (!match)
+    if (!match) {
       return res.status(401).json({ error: 'Current password is incorrect' });
+    }
 
     const hashed = await bcrypt.hash(newPassword, 10);
+
     await prisma.user.update({
       where: { id: Number(userId) },
       data: { password: hashed },
@@ -102,7 +106,7 @@ exports.changePassword = async (req, res) => {
 
     return res.json({ ok: true, message: 'Password updated' });
   } catch (err) {
-    console.error('changePassword error', err);
+    console.error('changePassword error:', err);
     return res.status(500).json({ error: 'Could not change password' });
   }
 };

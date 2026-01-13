@@ -1,16 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   sendMessage,
   getMessages,
   deleteMessage,
-} = require('../controllers/messageController');
-const { authMiddleware } = require('../middleware/authMiddleware');
+} from '../controllers/messageController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
+
+const router = express.Router();
 
 router.use(authMiddleware);
 router.post('/', sendMessage);
 router.get('/', getMessages);
-
 router.delete('/:id', deleteMessage);
 
-module.exports = router;
+export default router;
