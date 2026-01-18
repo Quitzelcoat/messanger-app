@@ -23,7 +23,10 @@ export default function AllUsers({ token }) {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch('http://localhost:3000/api/users', {
+        const API_BASE_URL =
+          import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+        const res = await fetch(`${API_BASE_URL}/api/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -90,7 +93,7 @@ export default function AllUsers({ token }) {
                     src={
                       u.profilePic ||
                       `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        u.username
+                        u.username,
                       )}&background=1e293b&color=ffffff&size=56&bold=true`
                     }
                     alt={u.username}

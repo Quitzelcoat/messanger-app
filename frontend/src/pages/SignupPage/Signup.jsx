@@ -18,7 +18,10 @@ export default function Signup() {
     setError('');
 
     try {
-      await axios.post('http://localhost:3000/api/signup', form);
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      await axios.post(`${API_BASE_URL}/api/signup`, form);
       navigate('/login');
     } catch (error) {
       const msg =

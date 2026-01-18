@@ -36,12 +36,12 @@ export default function Profile() {
       setLoading(true);
       setError('');
       try {
-        const { data } = await axios.get(
-          'http://localhost:3000/api/profile/me',
-          {
-            ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
-          }
-        );
+        const API_BASE_URL =
+          import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+        const { data } = await axios.get(`${API_BASE_URL}/api/profile/me`, {
+          ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
+        });
         if (cancelled) return;
         setForm({
           id: data.id || null,
@@ -93,9 +93,12 @@ export default function Profile() {
         bio: form.bio,
       };
 
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
       const { data } = await axios.put(
-        'http://localhost:3000/api/profile/me',
-        payload
+        `${API_BASE_URL}/api/profile/me`,
+        payload,
       );
       setForm((f) => ({
         ...f,
@@ -125,7 +128,10 @@ export default function Profile() {
     }
     setPwSaving(true);
     try {
-      await axios.put('http://localhost:3000/api/profile/me/password', {
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      await axios.put(`${API_BASE_URL}/api/profile/me/password`, {
         currentPassword: pwForm.currentPassword,
         newPassword: pwForm.newPassword,
       });

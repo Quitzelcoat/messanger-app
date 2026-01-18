@@ -18,10 +18,10 @@ export default function Login({ setToken }) {
     setError('');
 
     try {
-      const { data } = await axios.post(
-        'http://localhost:3000/api/login',
-        form
-      );
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      const { data } = await axios.post(`${API_BASE_URL}/api/login`, form);
       setToken(data.token);
       navigate('/');
     } catch (error) {

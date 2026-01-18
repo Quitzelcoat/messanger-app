@@ -71,10 +71,13 @@ export default function Chat({ token, onLogout }) {
     setLoadingMessages(true);
     setError('');
     try {
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
       const { data } = await axios.get(
-        `http://localhost:3000/api/messages?withUser=${encodeURIComponent(
-          selectedUserId
-        )}`
+        `${API_BASE_URL}/api/messages?withUser=${encodeURIComponent(
+          selectedUserId,
+        )}`,
       );
       setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -97,9 +100,13 @@ export default function Chat({ token, onLogout }) {
     if (!selectedUserId) return;
     try {
       const payload = { receiverId: Number(selectedUserId), content: text };
+
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
       const { data } = await axios.post(
-        'http://localhost:3000/api/messages',
-        payload
+        `${API_BASE_URL}/api/messages`,
+        payload,
       );
       setMessages((m) => [...m, data]);
     } catch (err) {
@@ -110,7 +117,10 @@ export default function Chat({ token, onLogout }) {
 
   const handleDelete = async (messageId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/messages/${messageId}`);
+      const API_BASE_URL =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      await axios.delete(`${API_BASE_URL}/api/messages/${messageId}`);
       setMessages((cur) => cur.filter((m) => m.id !== messageId));
     } catch (err) {
       console.error('Delete failed', err);
