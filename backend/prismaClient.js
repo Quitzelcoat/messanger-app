@@ -1,27 +1,20 @@
-// prismaClient.js
 import { PrismaClient } from './generated/prisma/index.js';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
+import pg from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL?.replace(/"/g, ''),
-});
+const { Pool } = pg;
 
+// The app uses the PgBouncer URL for performance
+const connectionString = process.env.DATABASE_URL;
+
+const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
-const globalForPrisma = globalThis;
-
-const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ['error', 'warn'],
-    adapter, // <- this is required
-  });
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
+const prisma = new PrismaClient({
+  adapter, // This tells Prisma 7 to use the pg driver we just set up
+  log: ['query', 'error', 'warn'],
+});
 
 export default prisma;
