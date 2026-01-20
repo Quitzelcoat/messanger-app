@@ -1,35 +1,27 @@
-import pg from 'pg';
-const { Client } = pg;
+// prismaClient.js
+import { PrismaClient } from './generated/prisma/index.js';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// 1. Disable SSL check globally for this test
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-const client = new Client({
-  user: 'messanger-app',
-  password: 'npg_K4ybOrwUog6d',
-  host: 'ep-hidden-feather-ahzd8tag.c-3.us-east-1.pg.koyeb.app',
-  database: 'koyeb',
-  port: 5432,
-  ssl: true,
-  connectionTimeoutMillis: 10000,
-  options: `--endpoint=ep-hidden-feather-ahzd8tag`,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL?.replace(/"/g, ''),
 });
 
-async function ultimateTest() {
-  try {
-    console.log('🛠️ Attempting manual routing connection...');
-    await client.connect();
-    console.log('FINALLY CONNECTED!');
-    const res = await client.query('SELECT current_database();');
-    console.log('You are connected to:', res.rows[0].current_database);
-    await client.end();
-  } catch (err) {
-    console.error('STILL BLOCKED.');
-    console.error('Error Detail:', err.message);
-    console.log(
-      "\nIf it says 'database does not exist', change 'koyebdb' to 'postgres' in the script.",
-    );
-  }
+const adapter = new PrismaPg(pool);
+
+const globalForPrisma = globalThis;
+
+const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: ['error', 'warn'],
+    adapter, // <- this is required
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
 }
 
-ultimateTest();
+export default prisma;
