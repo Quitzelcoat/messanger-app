@@ -7,6 +7,9 @@ dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL?.replace(/"/g, ''),
+  ssl: {
+    rejectUnauthorized: false, // Required for many managed DBs
+  },
 });
 
 const adapter = new PrismaPg(pool);
