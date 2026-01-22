@@ -1,5 +1,11 @@
 import useAuth from './auth/AuthProvider';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar'; // Add this
 import Signup from './pages/SignupPage/Signup';
 import Login from './pages/LoginPage/Login';
@@ -12,10 +18,15 @@ import Footer from './components/Footer/Footer';
 function App() {
   const { token, setToken, handleLogout } = useAuth();
 
-  return (
-    <BrowserRouter>
-      <div className="app-wrapper">
-        <Navbar onLogout={handleLogout} />
+  // Inner component so useLocation can be used inside BrowserRouter context
+  function InnerLayout() {
+    const location = useLocation();
+    const hideNavbar =
+      location.pathname === '/login' || location.pathname === '/signup';
+
+    return (
+      <>
+        {!hideNavbar && <Navbar onLogout={handleLogout} />}
 
         <main className="app-main">
           <Routes>
@@ -81,6 +92,14 @@ function App() {
         </main>
 
         <Footer />
+      </>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <div className="app-wrapper">
+        <InnerLayout />
       </div>
     </BrowserRouter>
   );
