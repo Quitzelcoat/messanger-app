@@ -10,8 +10,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "build": "prisma generate",
     "start": "node app.js",
-    "dev": "nodemon app.js",
-    "init-db": "node initTables.js"
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
